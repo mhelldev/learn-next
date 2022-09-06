@@ -2,35 +2,8 @@ import type { NextPage } from 'next'
 import Head from 'next/head'
 import Image from 'next/image'
 import styles from '../styles/Home.module.css'
-import {set1} from "./questions";
 
-export interface Answer {
-  id: number
-  desc: string
-}
-
-export interface Rationale {
-  id: number
-  desc: string
-}
-
-export interface Question {
-  id: number
-  question: string
-  answers: Answer[]
-  answerId: number[]
-  rationale: Rationale[]
-}
-
-export const getServerSideProps = async () => {
-
-  return {
-    props: { set1 }, // will be passed to the page component as props
-  }
-}
-
-const Home: NextPage = (data) => {
-  console.log(JSON.stringify(data))
+const Home: NextPage = () => {
   return (
     <div className={styles.container}>
       <Head>
@@ -40,6 +13,7 @@ const Home: NextPage = (data) => {
       </Head>
 
       <main className={styles.main}>
+
         <h1 className={styles.title}>
           Choose a Module
         </h1>
@@ -49,9 +23,9 @@ const Home: NextPage = (data) => {
         </p>
 
         <div className={styles.grid}>
-          <a href="https://nextjs.org/docs" className={styles.card}>
-            <h2>Documentation &rarr;</h2>
-            <p>Find in-depth information about Next.js features and API.</p>
+          <a href="/cloud-architect-study-guide" className={styles.card}>
+            <h2>Professional Cloud Architect Study Guide&rarr;</h2>
+            <p>Questions from the book.</p>
           </a>
 
           <a href="https://nextjs.org/learn" className={styles.card}>
@@ -59,23 +33,6 @@ const Home: NextPage = (data) => {
             <p>Learn about Next.js in an interactive course with quizzes!</p>
           </a>
 
-          <a
-            href="https://github.com/vercel/next.js/tree/canary/examples"
-            className={styles.card}
-          >
-            <h2>Examples &rarr;</h2>
-            <p>Discover and deploy boilerplate example Next.js projects.</p>
-          </a>
-
-          <a
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-          >
-            <h2>Deploy &rarr;</h2>
-            <p>
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
-          </a>
         </div>
       </main>
 
