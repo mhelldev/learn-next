@@ -19,7 +19,7 @@ export interface Question {
     question: string
     answers: Answer[]
     answerId: number[]
-    desc: string
+    rationale: Rationale[]
 }
 
 type QuizState = 'pending' | 'wrong' | 'correct'
@@ -67,7 +67,8 @@ const Quiz: NextPage = (data) => {
                     {quizState === 'pending' ?
                         <input type={'button'} value={'ok'} onClick={ () => {
                             if (selected === questions[questionIndex].answerId[0]) {
-                                setQuizState('correct')
+                                setQuestionIndex(questionIndex + 1)
+                                setQuizState('pending')
                             } else {
                                 setWrongCount(wrongCount + 1)
                                 setQuizState('wrong')
@@ -79,7 +80,7 @@ const Quiz: NextPage = (data) => {
 
                         }}/>}
                     {quizState === 'correct' && <p style={{color: 'green'}}><b>Correct!</b></p>}
-                    {quizState === 'wrong' && <p style={{color: 'red'}}><b>Wrong!</b></p>}
+                    {quizState === 'wrong' && <p style={{color: 'red'}}><b>Wrong!</b> (Correct: {String.fromCharCode(97 + questions[questionIndex].answerId[0])})</p>}
 
                 </fieldset>
             </main>
