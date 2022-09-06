@@ -2,11 +2,30 @@ import type { NextPage } from 'next'
 import Head from 'next/head'
 import Image from 'next/image'
 import styles from '../styles/Home.module.css'
+import {set1} from "./questions";
+
+export interface Answer {
+  id: number
+  desc: string
+}
+
+export interface Rationale {
+  id: number
+  desc: string
+}
+
+export interface Question {
+  id: number
+  question: string
+  answers: Answer[]
+  answerId: number[]
+  rationale: Rationale[]
+}
 
 export const getServerSideProps = async () => {
 
   return {
-    props: { test: 'test' }, // will be passed to the page component as props
+    props: { set1 }, // will be passed to the page component as props
   }
 }
 
