@@ -2,6 +2,7 @@ import {NextPage} from "next";
 import styles from "../../styles/Home.module.css";
 import Head from "next/head";
 import {set1} from "../questions";
+import {useState} from "react";
 
 export interface Answer {
     id: number
@@ -18,8 +19,10 @@ export interface Question {
     question: string
     answers: Answer[]
     answerId: number[]
-    rationale: Rationale[]
+    desc: string
 }
+
+type QuizState = 'pending' | 'wrong' | 'correct'
 
 export const getServerSideProps = async () => {
 
@@ -29,7 +32,13 @@ export const getServerSideProps = async () => {
 }
 
 const Quiz: NextPage = (data) => {
-    const questions: Question[] = (data as any).set1 as Question[]
+    const [quizStarted, setQuizStarted] = useState<boolean>(true)
+    const [questions, setQuestions] = useState<Question[]>((data as any).set1 as Question[])
+    const [questionIndex, setQuestionIndex] = useState<number>(0)
+    const [wrongCount, setWrongCount] = useState<number>(0)
+    const [selected, setSelected] = useState<number>(0)
+    const [quizState, setQuizState] = useState<QuizState>('pending')
+
     console.log(JSON.stringify(questions))
     return (
         <div className={styles.container}>
@@ -40,7 +49,39 @@ const Quiz: NextPage = (data) => {
             </Head>
 
             <main className={styles.main}>
-                Quiz!
+                <p>progress: {questionIndex} / {((data as any).set1 as Question[]).length}</p>
+                <p>wrong: {wrongCount}</p>
+                <h2 className={styles.description}>
+                    <i>{questions[questionIndex].id}) {questions[questionIndex].question}</i>
+                </h2>
+                <fieldset>
+                    <legend>Select an answer:</legend>
+
+                    <ol type={'a'}>
+                        {questions[questionIndex].answers.map((answer,index) => {
+                            return <li className={styles.description}>
+                                <i>{answer.desc} <input type={'radio'} name={'question'} onClick={() => setSelected(index)}/></i>
+                            </li>
+                        })}
+                        </ol>
+                    {quizState === 'pending' ?
+                        <input type={'button'} value={'ok'} onClick={ () => {
+                            if (selected === questions[questionIndex].answerId[0]) {
+                                setQuizState('correct')
+                            } else {
+                                setWrongCount(wrongCount + 1)
+                                setQuizState('wrong')
+                            }
+                        }}/> :
+                        <input type={'button'} value={'next'} onClick={ () => {
+                                setQuestionIndex(questionIndex + 1)
+                                setQuizState('pending')
+
+                        }}/>}
+                    {quizState === 'correct' && <p style={{color: 'green'}}><b>Correct!</b></p>}
+                    {quizState === 'wrong' && <p style={{color: 'red'}}><b>Wrong!</b></p>}
+
+                </fieldset>
             </main>
         </div>
     )
